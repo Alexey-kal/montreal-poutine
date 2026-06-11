@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Montréal Poutine — Resto Bar · 181 Rue Saint-Paul Est</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --red:#C8102E;
+  --gold:#C9973A;
+  --gold-lt:#E8C46A;
+  --black:#0e0905;
+  --dark:#130e07;
+  --mid:#1a1208;
+  --warm:#1f1508;
+  --cream:#F5EDD8;
+  --text:#F5EDD8;
+  --muted:rgba(245,237,216,.55);
+  --border:rgba(245,237,216,.1);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--text);font-family:'Inter',sans-serif;cursor:none;overflow-x:hidden;}
+
+/* CURSOR */
+#cur-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(237,229,212,.6);border-radius:50%;pointer-events:none;z-index:9000;transform:translate(-50%,-50%);transition:width .5s cubic-bezier(.16,1,.3,1),height .5s cubic-bezier(.16,1,.3,1),border-color .3s,opacity .3s;mix-blend-mode:difference;}
+#cur-dot{position:fixed;width:4px;height:4px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9001;transform:translate(-50%,-50%);}
+.is-hovered #cur-ring{width:56px;height:56px;border-color:rgba(201,151,58,.8);}
+
+/* LOADER */
+#loader{position:fixed;inset:0;z-index:8000;background:#0e0905;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;transition:opacity .7s ease;}
+#loader.out{opacity:0;pointer-events:none;}
+.ld-fleur{font-size:2.8rem;color:var(--gold);animation:ldSpin 4s linear infinite;}
+.ld-name{font-family:'Playfair Display',serif;font-size:.65rem;letter-spacing:.5em;text-transform:uppercase;color:var(--muted);}
+.ld-bar{width:180px;height:1px;background:rgba(255,255,255,.08);}
+.ld-prog{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-lt));width:0%;transition:width .04s linear;}
+@keyframes ldSpin{to{transform:rotate(360deg);}}
+
+/* NAV */
+nav{position:fixed;top:0;width:100%;z-index:500;display:flex;justify-content:space-between;align-items:center;padding:2rem 5rem;transition:padding .5s ease,background .5s ease,backdrop-filter .5s ease;}
+nav.scrolled{padding:1.2rem 5rem;background:rgba(14,9,5,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.n-logo{font-family:'Playfair Display',serif;font-weight:700;font-size:.95rem;letter-spacing:.14em;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:.5rem;}
+.n-links{display:flex;list-style:none;gap:2.5rem;align-items:center;}
+.n-links a{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .3s;position:relative;}
+.n-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:right;transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.n-links a:hover{color:var(--text);}
+.n-links a:hover::after{transform:scaleX(1);transform-origin:left;}
+.n-cta{background:var(--red)!important;color:#fff!important;padding:.6rem 1.5rem!important;letter-spacing:.16em!important;}
+.n-cta::after{display:none!important;}
+.n-cta:hover{background:#a30d26!important;color:#fff!important;}
+
+/* HERO */
+#hero{height:100vh;position:relative;display:flex;align-items:flex-end;}
+.hero-video-wrap{position:absolute;inset:0;overflow:hidden;}
+#hvid{width:100%;height:100%;object-fit:contain;object-position:center;background:#070707;}
+.hero-video-wrap::before{content:'';position:absolute;inset:-20px;background:inherit;z-index:-1;}
+#hvid-bg{position:absolute;inset:-40px;width:calc(100% + 80px);height:calc(100% + 80px);object-fit:cover;object-position:center;filter:blur(18px) brightness(.28) saturate(.7);z-index:0;}
+#hvid{position:relative;z-index:1;}
+.hero-grade{position:absolute;inset:0;background:
+  linear-gradient(to right, rgba(14,9,5,.78) 0%, rgba(14,9,5,.25) 55%, rgba(14,9,5,.02) 100%),
+  linear-gradient(to top, rgba(14,9,5,.92) 0%, rgba(14,9,5,.35) 35%, transparent 65%);}
+.hero-body{position:relative;z-index:2;padding:0 5rem 7rem;width:100%;}
+.hero-eyebrow{display:flex;align-items:center;gap:.8rem;font-size:.62rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);margin-bottom:2.5rem;opacity:0;animation:fuUp .8s .6s forwards;}
+.hero-eyebrow i{width:28px;height:1px;background:var(--gold);display:block;}
+.h-title{font-family:'Playfair Display',serif;font-weight:900;line-height:.88;letter-spacing:-.025em;}
+.h-line{overflow:hidden;display:block;}
+.h-word{display:inline-block;transform:translateY(105%);}
+.h-line:nth-child(1) .h-word{font-size:clamp(4.5rem,11vw,10.5rem);color:var(--text);animation:wUp 1.1s cubic-bezier(.16,1,.3,1) .35s forwards;}
+.h-line:nth-child(2) .h-word{font-size:clamp(5rem,13vw,12.5rem);color:var(--red);animation:wUp 1.1s cubic-bezier(.16,1,.3,1) .52s forwards;}
+.h-line:nth-child(3) .h-word{font-size:clamp(1.8rem,4vw,3.8rem);font-weight:400;font-style:italic;color:var(--gold-lt);animation:wUp 1.1s cubic-bezier(.16,1,.3,1) .68s forwards;}
+.hero-sub{font-size:.75rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-top:2.2rem;opacity:0;animation:fuUp .8s 1s forwards;}
+.hero-btns{margin-top:2.8rem;display:flex;gap:1rem;opacity:0;animation:fuUp .8s 1.2s forwards;}
+.hbtn-p{display:inline-flex;align-items:center;gap:.7rem;background:var(--red);color:#fff;padding:.95rem 2rem;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;transition:background .3s,gap .3s;}
+.hbtn-p:hover{background:#a30d26;gap:1rem;}
+.hbtn-s{display:inline-flex;align-items:center;gap:.7rem;border:1px solid rgba(237,229,212,.2);color:var(--text);padding:.95rem 2rem;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;transition:border-color .3s,color .3s,gap .3s;}
+.hbtn-s:hover{border-color:var(--gold);color:var(--gold);gap:1rem;}
+.hero-right{position:absolute;right:5rem;top:50%;transform:translateY(-50%);z-index:2;display:flex;flex-direction:column;gap:2.5rem;text-align:right;opacity:0;animation:fuUp .9s 1.3s forwards;}
+.hstat-num{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--text);line-height:1;}
+.hstat-lbl{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:.2rem;}
+.hero-scroll-hint{position:absolute;bottom:3.5rem;right:5rem;z-index:2;display:flex;align-items:center;gap:1rem;opacity:0;animation:fuUp .8s 1.5s forwards;}
+.scroll-txt{font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);}
+.scroll-track{width:1px;height:52px;background:rgba(201,151,58,.25);position:relative;overflow:hidden;}
+.scroll-fill{position:absolute;top:-100%;left:0;width:100%;height:100%;background:var(--gold);animation:scrollFill 2s ease-in-out infinite;}
+
+/* TICKER */
+#ticker{background:var(--red);padding:1.1rem 0;overflow:hidden;}
+.tick-wrap{display:flex;gap:0;white-space:nowrap;}
+.tick-inner{display:flex;gap:2.5rem;animation:tickMove 20s linear infinite;flex-shrink:0;}
+.tick-item{font-family:'Playfair Display',serif;font-size:1rem;font-style:italic;color:rgba(255,255,255,.92);display:flex;align-items:center;gap:2.5rem;flex-shrink:0;}
+.tick-sep{width:4px;height:4px;background:rgba(255,255,255,.5);border-radius:50%;flex-shrink:0;}
+
+/* SECTIONS */
+section{padding:9rem 0;}
+.wrap{max-width:1240px;margin:0 auto;padding:0 5rem;}
+.eyebrow{font-size:.62rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;}
+.eyebrow::before{content:'';width:22px;height:1px;background:var(--gold);flex-shrink:0;}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(3rem,5.5vw,5.5rem);font-weight:700;line-height:.92;letter-spacing:-.025em;margin-bottom:1.5rem;}
+.body-text{color:var(--muted);line-height:1.9;font-size:.93rem;}
+.rule{width:44px;height:2px;background:var(--gold);margin:1.2rem 0 2.2rem;}
+
+/* ABOUT */
+#about{background:var(--dark);}
+.about-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:9rem;align-items:center;}
+.about-imgs{position:relative;display:grid;grid-template-columns:1fr .55fr;grid-template-rows:auto auto;gap:8px;}
+.aimg-main{grid-row:1/3;width:100%;aspect-ratio:2/3;object-fit:cover;display:block;}
+.aimg-top{width:100%;aspect-ratio:1;object-fit:cover;display:block;}
+.aimg-bot{width:100%;aspect-ratio:1;object-fit:cover;display:block;filter:brightness(.78);}
+.about-badge{position:absolute;top:-1.5rem;right:-.5rem;background:var(--red);width:100px;height:100px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 8px 40px rgba(200,16,46,.35);}
+.about-badge b{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:#fff;}
+.about-badge small{font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.65);}
+.about-facts{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:3rem;border:1px solid var(--border);}
+.af{padding:1.4rem 1.5rem;background:rgba(255,248,235,.02);}
+.af:hover{background:rgba(201,151,58,.04);}
+.af label{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.4rem;}
+.af p{font-size:.85rem;color:var(--text);line-height:1.6;}
+
+/* VIDEO INTERLUDE */
+#vinterlude{position:relative;height:65vh;overflow:hidden;background:#0e0905;}
+#vvid-bg{position:absolute;inset:-40px;width:calc(100% + 80px);height:calc(100% + 80px);object-fit:cover;filter:blur(20px) brightness(.28) saturate(.5);z-index:0;}
+#vvid{position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:1;height:100%;width:auto;max-width:100%;object-fit:contain;display:block;}
+.vi-overlay{position:absolute;inset:0;background:rgba(14,9,5,.45);z-index:2;}
+.vi-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:2rem;z-index:3;}
+.vi-quote{font-family:'Playfair Display',serif;font-size:clamp(2rem,4.5vw,4rem);font-style:italic;color:#fff;text-align:center;max-width:900px;line-height:1.2;text-shadow:0 4px 30px rgba(0,0,0,.4);}
+.vi-quote em{color:var(--gold-lt);font-style:normal;}
+
+/* MARQUEE (second ticker) */
+#mq2{background:var(--warm);padding:1.3rem 0;overflow:hidden;border-top:1px solid rgba(201,151,58,.12);border-bottom:1px solid rgba(201,151,58,.12);}
+.mq2-inner{display:flex;gap:3rem;animation:tickMove 28s linear infinite reverse;white-space:nowrap;}
+.mq2-item{font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(201,151,58,.65);flex-shrink:0;}
+
+/* MENU */
+#menu{background:var(--black);}
+.menu-top{display:grid;grid-template-columns:1fr auto;align-items:end;gap:3rem;margin-bottom:3.5rem;}
+.menu-tabs{display:flex;border-bottom:1px solid var(--border);}
+.mtab{background:none;border:none;font-family:'Inter',sans-serif;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);padding:1rem 1.8rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .3s,border-color .3s;}
+.mtab.on,.mtab:hover{color:var(--text);}
+.mtab.on{border-bottom-color:var(--gold);}
+.mcat{display:none;}
+.mcat.on{display:block;animation:fadeIn .45s ease;}
+.mcat-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 5rem;}
+.mcol-title{font-family:'Playfair Display',serif;font-size:1.9rem;font-style:italic;color:var(--gold);padding-bottom:1.2rem;border-bottom:1px solid rgba(201,151,58,.2);margin-bottom:2rem;grid-column:1/-1;}
+.mi{display:flex;justify-content:space-between;align-items:baseline;padding:.85rem 0;border-bottom:1px solid rgba(245,237,216,.06);gap:1.5rem;}
+.mi-l{flex:1;min-width:0;}
+.mi-name{font-size:.9rem;font-weight:500;color:var(--text);}
+.mi-desc{font-size:.72rem;color:rgba(237,229,212,.32);line-height:1.4;margin-top:.15rem;}
+.mi-price{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--gold);white-space:nowrap;flex-shrink:0;}
+.menu-callout{background:rgba(200,16,46,.06);border:1px solid rgba(200,16,46,.18);padding:1.5rem 2rem;margin-top:2rem;grid-column:1/-1;}
+.menu-callout p{font-size:.82rem;color:var(--muted);line-height:1.7;}
+.menu-callout strong{color:var(--gold-lt);}
+.menu-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:5rem;}
+.mg-item{overflow:hidden;aspect-ratio:1;position:relative;}
+.mg-item img{width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.16,1,.3,1),filter .9s;filter:brightness(.75) saturate(.85);}
+.mg-item:hover img{transform:scale(1.07);filter:brightness(.95) saturate(1.1);}
+.mg-label{position:absolute;bottom:0;left:0;right:0;padding:1rem 1.2rem;background:linear-gradient(to top,rgba(7,7,7,.8),transparent);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(237,229,212,.7);transform:translateY(100%);transition:transform .4s ease;}
+.mg-item:hover .mg-label{transform:translateY(0);}
+
+/* GALLERY */
+#gallery{background:var(--dark);padding:0;}
+.gallery-head{padding:8rem 5rem 5rem;text-align:center;}
+.gallery-mosaic{display:grid;grid-template-columns:1.5fr 1fr 1fr;grid-template-rows:340px 340px;gap:5px;}
+.gm{overflow:hidden;position:relative;}
+.gm:first-child{grid-row:1/3;}
+.gm img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 1.1s cubic-bezier(.16,1,.3,1),filter .8s;filter:brightness(.78);}
+.gm:hover img{transform:scale(1.06);filter:brightness(.9);}
+.gm-tag{position:absolute;bottom:1.2rem;left:1.2rem;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(237,229,212,.65);background:rgba(7,7,7,.55);backdrop-filter:blur(6px);padding:.3rem .9rem;}
+
+/* NUMBERS */
+#numbers{background:var(--warm);padding:7rem 0;}
+.nums-grid{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr 1px 1fr;gap:0;align-items:center;}
+.num-div{background:rgba(201,151,58,.12);align-self:stretch;}
+.num-block{padding:3rem;text-align:center;}
+.num-big{font-family:'Playfair Display',serif;font-size:4rem;font-weight:900;color:var(--gold);line-height:1;}
+.num-lbl{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:.5rem;}
+
+/* RESERVATIONS */
+#reservations{background:var(--black);}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:8rem;align-items:start;}
+.res-media{position:relative;}
+.res-vid{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;}
+.res-badge{position:absolute;bottom:-1.2rem;right:0;background:var(--gold);padding:.8rem 1.8rem;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--black);font-weight:600;}
+label.fl{display:block;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(237,229,212,.38);margin-bottom:.5rem;}
+.fg{margin-bottom:1.2rem;}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(255,248,230,.03);border:1px solid var(--border);padding:.9rem 1rem;color:var(--text);font-family:'Inter',sans-serif;font-size:.88rem;outline:none;transition:border-color .3s,background .3s;-webkit-appearance:none;border-radius:0;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);background:rgba(201,151,58,.03);}
+.fg select option{background:var(--dark);}
+.fg textarea{height:88px;resize:none;}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.submit-btn{width:100%;background:var(--red);color:#fff;border:none;padding:1.1rem;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;transition:background .3s;margin-top:.5rem;display:flex;align-items:center;justify-content:center;gap:.8rem;}
+.submit-btn:hover{background:#a30d26;}
+
+/* CONTACT */
+#contact{background:#1a1208;padding:0;}
+.contact-strip{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;}
+.c-div{background:var(--border);}
+.c-block{padding:5rem;}
+.c-block h4{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--gold);margin-bottom:1.5rem;}
+.c-block p,.c-block a{font-size:.85rem;color:var(--muted);line-height:2.1;text-decoration:none;display:block;}
+.c-block a:hover{color:var(--gold);}
+.c-rule{width:32px;height:1px;background:var(--red);margin-bottom:1.5rem;}
+
+/* FOOTER */
+footer{background:#0e0905;border-top:1px solid rgba(245,237,216,.08);padding:2.5rem 5rem;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:2rem;}
+.f-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--gold);}
+.f-copy{font-size:.68rem;color:rgba(237,229,212,.18);text-align:center;}
+.f-addr{font-size:.68rem;color:rgba(237,229,212,.18);text-align:right;}
+
+/* ANIMATIONS */
+@keyframes wUp{to{transform:translateY(0);}}
+@keyframes fuUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes tickMove{to{transform:translateX(-50%);}}
+@keyframes scrollFill{0%{top:-100%;}100%{top:100%;}}
+.rv{opacity:0;transform:translateY(48px);transition:opacity 1s ease,transform 1s cubic-bezier(.16,1,.3,1);}
+.rv.on{opacity:1;transform:translateY(0);}
+.rv-d1{transition-delay:.1s;}.rv-d2{transition-delay:.2s;}.rv-d3{transition-delay:.3s;}.rv-d4{transition-delay:.4s;}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  nav,nav.scrolled{padding:1.2rem 1.5rem;}
+  .n-links{display:none;}
+  .hero-body{padding:0 1.5rem 4rem;}
+  .hero-right,.hero-scroll-hint{display:none;}
+  .about-grid,.res-grid{grid-template-columns:1fr;gap:3rem;}
+  .about-imgs{grid-template-columns:1fr;}
+  .aimg-top,.aimg-bot{display:none;}
+  .aimg-main{aspect-ratio:1;}
+  .nums-grid{grid-template-columns:1fr 1fr;gap:0;}
+  .num-div{display:none;}
+  .contact-strip{grid-template-columns:1fr;}
+  .c-div{display:none;}
+  .gallery-mosaic{grid-template-columns:1fr 1fr;grid-template-rows:auto;}
+  .gm:first-child{grid-row:auto;}
+  .mcat-grid{grid-template-columns:1fr;}
+  .menu-gallery{grid-template-columns:1fr 1fr;}
+  .menu-top{grid-template-columns:1fr;gap:1.5rem;}
+  .wrap{padding:0 1.5rem;}
+  section{padding:5rem 0;}
+  footer{grid-template-columns:1fr;text-align:center;padding:2rem 1.5rem;}
+  .f-addr{text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-fleur">⚜</div>
+  <div class="ld-name">Montréal Poutine</div>
+  <div class="ld-bar"><div class="ld-prog" id="ldp"></div></div>
+</div>
+
+<!-- CURSOR -->
+<div id="cur-ring"></div>
+<div id="cur-dot"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="n-logo">⚜ Montréal Poutine</a>
+  <ul class="n-links">
+    <li><a href="#about">Notre histoire</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#gallery">Galerie</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#reservations" class="n-cta">Réserver</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-video-wrap">
+    <video id="hvid-bg" autoplay muted loop playsinline>
+      <source src="reservations.mp4" type="video/mp4">
+    </video>
+    <video id="hvid" autoplay muted loop playsinline>
+      <source src="hero.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="hero-grade"></div>
+  <div class="hero-body">
+    <div class="hero-eyebrow"><i></i>Resto Bar · Vieux-Montréal · Saint-Paul Est</div>
+    <h1 class="h-title">
+      <span class="h-line"><span class="h-word">La vraie</span></span>
+      <span class="h-line"><span class="h-word">Poutine</span></span>
+      <span class="h-line"><span class="h-word">montréalaise.</span></span>
+    </h1>
+    <p class="hero-sub">Frites · Fromage frais · Sauce maison · depuis toujours</p>
+    <div class="hero-btns">
+      <a href="#menu" class="hbtn-p">Voir le menu →</a>
+      <a href="#reservations" class="hbtn-s">Réserver une table →</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div><div class="hstat-num">3 600+</div><div class="hstat-lbl">Avis Google</div></div>
+    <div><div class="hstat-num">8+</div><div class="hstat-lbl">Poutines créatives</div></div>
+    <div><div class="hstat-num">$3.95</div><div class="hstat-lbl">Hot dog dès</div></div>
+  </div>
+  <div class="hero-scroll-hint">
+    <div class="scroll-track"><div class="scroll-fill"></div></div>
+    <span class="scroll-txt">Défiler</span>
+  </div>
+</section>
+
+<!-- RED TICKER -->
+<div id="ticker">
+  <div class="tick-wrap">
+    <div class="tick-inner" id="ti">
+      <span class="tick-item">Poutine classique <span class="tick-sep"></span></span>
+      <span class="tick-item">Smoked Meat authentique <span class="tick-sep"></span></span>
+      <span class="tick-item">Fromage en grains frais <span class="tick-sep"></span></span>
+      <span class="tick-item">Terrasse estivale <span class="tick-sep"></span></span>
+      <span class="tick-item">Bar sportif · sous-sol <span class="tick-sep"></span></span>
+      <span class="tick-item">181 Rue Saint-Paul Est <span class="tick-sep"></span></span>
+      <span class="tick-item">Vieux-Montréal <span class="tick-sep"></span></span>
+      <span class="tick-item">Ouvert 7 jours <span class="tick-sep"></span></span>
+      <span class="tick-item">Poutine classique <span class="tick-sep"></span></span>
+      <span class="tick-item">Smoked Meat authentique <span class="tick-sep"></span></span>
+      <span class="tick-item">Fromage en grains frais <span class="tick-sep"></span></span>
+      <span class="tick-item">Terrasse estivale <span class="tick-sep"></span></span>
+      <span class="tick-item">Bar sportif · sous-sol <span class="tick-sep"></span></span>
+      <span class="tick-item">181 Rue Saint-Paul Est <span class="tick-sep"></span></span>
+      <span class="tick-item">Vieux-Montréal <span class="tick-sep"></span></span>
+      <span class="tick-item">Ouvert 7 jours <span class="tick-sep"></span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="about-imgs rv">
+        <img src="sign.jpg" class="aimg-main" alt="Enseigne Montréal Poutine">
+        <img src="poutine.jpg" class="aimg-top" alt="Poutines">
+        <img src="cocktail.jpg" class="aimg-bot" alt="Cocktail">
+        <div class="about-badge"><b>⚜</b><small>Vieux-<br>Montréal</small></div>
+      </div>
+      <div>
+        <p class="eyebrow rv">Notre histoire</p>
+        <div class="rule rv rv-d1"></div>
+        <h2 class="section-title rv rv-d1">L'authenticité québécoise dans chaque assiette</h2>
+        <p class="body-text rv rv-d2">Au cœur du Vieux-Montréal, le Montréal Poutine Resto Bar célèbre la poutine comme elle a toujours été : frites croustillantes, fromage en grains frais qui grince sous la dent, sauce maison mijotée lentement. Pas de compromis, jamais.</p>
+        <p class="body-text rv rv-d3" style="margin-top:1rem;">Smoked meat de qualité, hot dogs, burgers juteux, salades fraîches et mocktails maison complètent l'expérience. Terrasse en saison. Bar sportif au sous-sol.</p>
+        <div class="about-facts rv rv-d2">
+          <div class="af"><label>Adresse</label><p>181 Rue Saint-Paul Est<br>Montréal, QC H2Y 1G8</p></div>
+          <div class="af"><label>Téléphone</label><p>(514) 866-0008</p></div>
+          <div class="af"><label>Heures d'ouverture</label><p>Lun–Ven : 11h30–22h00<br>Sam–Dim : 11h00–23h00</p></div>
+          <div class="af"><label>Services</label><p>Sur place · À emporter<br>Livraison disponible</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO INTERLUDE -->
+<div id="vinterlude">
+  <video id="vvid-bg" autoplay muted loop playsinline>
+      <source src="reservations.mp4" type="video/mp4">
+    </video>
+    <video id="vvid" autoplay muted loop playsinline>
+      <source src="interlude.mp4" type="video/mp4">
+    </video>
+  <div class="vi-overlay"></div>
+  <div class="vi-text">
+    <p class="vi-quote">&ldquo;La poutine, c'est pas juste un plat —<br><em>c'est une émotion.</em>&rdquo;</p>
+  </div>
+</div>
+
+<!-- SECOND TICKER -->
+<div id="mq2">
+  <div class="mq2-inner">
+    <span class="mq2-item">DEPUIS TOUJOURS</span><span class="mq2-item">·</span>
+    <span class="mq2-item">FRITES MAISON</span><span class="mq2-item">·</span>
+    <span class="mq2-item">FROMAGE EN GRAINS</span><span class="mq2-item">·</span>
+    <span class="mq2-item">SAUCE MAISON</span><span class="mq2-item">·</span>
+    <span class="mq2-item">VIEUX-MONTRÉAL</span><span class="mq2-item">·</span>
+    <span class="mq2-item">DEPUIS TOUJOURS</span><span class="mq2-item">·</span>
+    <span class="mq2-item">FRITES MAISON</span><span class="mq2-item">·</span>
+    <span class="mq2-item">FROMAGE EN GRAINS</span><span class="mq2-item">·</span>
+    <span class="mq2-item">SAUCE MAISON</span><span class="mq2-item">·</span>
+    <span class="mq2-item">VIEUX-MONTRÉAL</span><span class="mq2-item">·</span>
+    <span class="mq2-item">DEPUIS TOUJOURS</span><span class="mq2-item">·</span>
+    <span class="mq2-item">FRITES MAISON</span><span class="mq2-item">·</span>
+    <span class="mq2-item">FROMAGE EN GRAINS</span><span class="mq2-item">·</span>
+    <span class="mq2-item">SAUCE MAISON</span><span class="mq2-item">·</span>
+    <span class="mq2-item">VIEUX-MONTRÉAL</span><span class="mq2-item">·</span>
+  </div>
+</div>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="wrap">
+    <div class="menu-top rv">
+      <div>
+        <p class="eyebrow">Ce que nous servons</p>
+        <h2 class="section-title">Notre<br><em style="color:var(--gold);">menu complet</em></h2>
+      </div>
+      <div class="menu-tabs">
+        <button class="mtab on" onclick="mTab('poutines',this)">Poutines</button>
+        <button class="mtab" onclick="mTab('smoked',this)">Smoked Meat</button>
+        <button class="mtab" onclick="mTab('burgers',this)">Burgers & Salades</button>
+        <button class="mtab" onclick="mTab('drinks',this)">Boissons</button>
+      </div>
+    </div>
+
+    <div class="mcat on" id="mc-poutines">
+      <div class="mcat-grid">
+        <div class="mcol-title">Poutines</div>
+        <div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Poutine Régulière</div><div class="mi-desc">Frites · sauce maison · fromage frais</div></div><div class="mi-price">$15.45</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Poutine avec Poulet Frit</div></div><div class="mi-price">$17.25</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Poutine avec Saucisse Hot Dog</div></div><div class="mi-price">$16.00</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Poutine avec Oignons Frits</div></div><div class="mi-price">$16.00</div></div>
+        </div>
+        <div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Poutine Italienne</div><div class="mi-desc">Sauce bolognaise maison</div></div><div class="mi-price">$17.25</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Poutine Saucisses Épicées</div></div><div class="mi-price">$17.00</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Poutine Poulet Grillé</div></div><div class="mi-price">$17.25</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Poutine au Smoked Meat</div></div><div class="mi-price">$17.45</div></div>
+        </div>
+        <div class="menu-callout"><p>💡 Dans tous nos plats servis avec frites, changez-les pour une poutine régulière pour seulement <strong>+$4.25</strong> — fromage frais inclus!</p></div>
+      </div>
+    </div>
+
+    <div class="mcat" id="mc-smoked">
+      <div class="mcat-grid">
+        <div class="mcol-title">Smoked Meat & Hot Dogs</div>
+        <div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Sandwich Smoked Meat</div><div class="mi-desc">Pain de seigle · viande fumée · moutarde · cornichon</div></div><div class="mi-price">$12.95</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Assiette Smoked Meat</div><div class="mi-desc">Sandwich · frites · salade de chou</div></div><div class="mi-price">$21.25</div></div>
+        </div>
+        <div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Hot Dog / Unité</div></div><div class="mi-price">$3.95</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Assiette Hot Dog</div><div class="mi-desc">2 hot dogs · frites · salade de chou</div></div><div class="mi-price">$15.75</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mcat" id="mc-burgers">
+      <div class="mcat-grid">
+        <div class="mcol-title">Burgers, Salades & Poulet</div>
+        <div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">House Burger</div><div class="mi-desc">Laitue · tomates · oignons · Swiss cheese · frites</div></div><div class="mi-price">$20.95–$21.95</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Burger Poulet Grillé</div><div class="mi-desc">Swiss cheese · frites · salade de chou</div></div><div class="mi-price">$20.95–$21.95</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Burger Poulet Frit</div><div class="mi-desc">Swiss cheese · frites · salade de chou</div></div><div class="mi-price">$20.95–$21.95</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">3 Morceaux Poulet Pané</div><div class="mi-desc">Frites · salade de chou · sauce miel &amp; BBQ</div></div><div class="mi-price">$19.75</div></div>
+        </div>
+        <div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Salade Jardinière</div><div class="mi-desc">Légumes frais · vinaigrette maison</div></div><div class="mi-price">$18.95</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Salade Jardinière + Poulet Grillé</div></div><div class="mi-price">$22.95</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Salade César</div><div class="mi-desc">Laitue · bacon · parmesan · croûtons</div></div><div class="mi-price">$19.95</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Salade César + Poulet Grillé</div></div><div class="mi-price">$23.95</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mcat" id="mc-drinks">
+      <div class="mcat-grid">
+        <div class="mcol-title">Mocktails & Boissons</div>
+        <div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Mojito</div><div class="mi-desc">Menthe · lime · sirop simple · soda</div></div><div class="mi-price">$9</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Passionata</div><div class="mi-desc">Fruit de la passion · lime · sirop · soda</div></div><div class="mi-price">$9</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Mango Ale</div><div class="mi-desc">Mangue · cannelle · lime · ginger ale</div></div><div class="mi-price">$9</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Refresh</div><div class="mi-desc">Framboise · basilic · lime · soda</div></div><div class="mi-price">$9</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Sweet Goyave</div><div class="mi-desc">Goyave · thym · lime · ginger beer</div></div><div class="mi-price">$9</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Bloody Caesar</div><div class="mi-desc">Clamato · tabasco · pickles · céleri sel</div></div><div class="mi-price">$9</div></div>
+        </div>
+        <div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Boissons froides</div><div class="mi-desc">Eska · Coke · Sprite · thé glacé · Fanta · tonic</div></div><div class="mi-price">$4</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Café · Thé · Espresso</div></div><div class="mi-price">$3.50–$4</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Latte · Cappuccino · Chocolat chaud</div></div><div class="mi-price">$4.75–$5.25</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Jus variés</div><div class="mi-desc">Orange · mangue · ananas · canneberge · pamplemousse</div></div><div class="mi-price">$4</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Assiette de frites</div></div><div class="mi-price">$7.95</div></div>
+          <div class="mi"><div class="mi-l"><div class="mi-name">Fromage en grains 200g</div></div><div class="mi-price">$7.25</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-gallery rv" style="margin-top:5rem;">
+      <div class="mg-item"><img src="poutine.jpg" alt="Poutines"><div class="mg-label">Nos poutines</div></div>
+      <div class="mg-item"><img src="food.jpg" alt="Nourriture"><div class="mg-label">Menu complet</div></div>
+      <div class="mg-item"><img src="cocktail.jpg" alt="Mocktail"><div class="mg-label">Mocktails</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="gallery-head rv">
+    <p class="eyebrow" style="justify-content:center;">L'expérience</p>
+    <h2 class="section-title" style="text-align:center;">La galerie</h2>
+  </div>
+  <div class="gallery-mosaic">
+    <div class="gm"><img src="poutine.jpg" alt="Poutines"><div class="gm-tag">Nos poutines</div></div>
+    <div class="gm"><img src="food.jpg" alt="Nourriture"><div class="gm-tag">Menu complet</div></div>
+    <div class="gm"><img src="cocktail.jpg" alt="Boissons"><div class="gm-tag">Mocktails</div></div>
+    <div class="gm"><img src="drinks.jpg" alt="Ambiance"><div class="gm-tag">Ambiance</div></div>
+    <div class="gm"><img src="sign.jpg" alt="Enseigne"><div class="gm-tag">Saint-Paul Est</div></div>
+  </div>
+</section>
+
+<!-- NUMBERS -->
+<section id="numbers">
+  <div class="wrap">
+    <div class="nums-grid">
+      <div class="num-block rv"><div class="num-big">3 600+</div><div class="num-lbl">Avis Google</div></div>
+      <div class="num-div"></div>
+      <div class="num-block rv rv-d1"><div class="num-big">8+</div><div class="num-lbl">Poutines créatives</div></div>
+      <div class="num-div"></div>
+      <div class="num-block rv rv-d2"><div class="num-big">7j/7</div><div class="num-lbl">Ouvert toute la semaine</div></div>
+      <div class="num-div"></div>
+      <div class="num-block rv rv-d3"><div class="num-big">$3.95</div><div class="num-lbl">Hot dog dès</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVATIONS -->
+<section id="reservations">
+  <div class="wrap">
+    <div class="res-grid">
+      <div class="rv">
+        <p class="eyebrow">Venez nous voir</p>
+        <div class="rule"></div>
+        <h2 class="section-title">Réservez<br><em style="color:var(--gold);">votre table</em></h2>
+        <p class="body-text" style="max-width:420px;">Que ce soit pour un repas en famille, entre amis, ou une grande tablée. Terrasse disponible en saison. Bar sportif au sous-sol.</p>
+        <div class="res-media" style="margin-top:3rem;">
+          <video autoplay muted loop playsinline class="res-vid">
+            <source src="reservations.mp4" type="video/mp4">
+          </video>
+          <div class="res-badge">Ouvert 7 jours sur 7</div>
+        </div>
+      </div>
+      <div class="rv rv-d2">
+        <form action="https://formspree.io/f/mzdwzrzw" method="POST">
+          <div class="fg-row">
+            <div class="fg"><label class="fl">Prénom</label><input type="text" name="prenom" required placeholder="Marie"></div>
+            <div class="fg"><label class="fl">Nom</label><input type="text" name="nom" required placeholder="Tremblay"></div>
+          </div>
+          <div class="fg"><label class="fl">Courriel</label><input type="email" name="email" required placeholder="marie@courriel.com"></div>
+          <div class="fg"><label class="fl">Téléphone</label><input type="tel" name="tel" placeholder="(514) 000-0000"></div>
+          <div class="fg-row">
+            <div class="fg"><label class="fl">Date</label><input type="date" name="date" required></div>
+            <div class="fg"><label class="fl">Heure</label>
+              <select name="heure">
+                <option>11h30</option><option>12h00</option><option>12h30</option><option>13h00</option>
+                <option>17h00</option><option>17h30</option><option>18h00</option><option>18h30</option>
+                <option>19h00</option><option>19h30</option><option>20h00</option><option>20h30</option>
+              </select></div>
+          </div>
+          <div class="fg"><label class="fl">Nombre de personnes</label>
+            <select name="personnes">
+              <option>1–2 personnes</option><option>3–4 personnes</option>
+              <option>5–6 personnes</option><option>7–10 personnes</option><option>10+</option>
+            </select></div>
+          <div class="fg"><label class="fl">Notes (allergies, occasion spéciale...)</label>
+            <textarea name="notes" placeholder="Ex: allergie aux noix, anniversaire..."></textarea></div>
+          <button type="submit" class="submit-btn">Envoyer la réservation →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap" style="padding-top:7rem;padding-bottom:0;">
+    <div class="rv" style="text-align:center;margin-bottom:5rem;">
+      <p class="eyebrow" style="justify-content:center;">Nous trouver</p>
+      <h2 class="section-title">Contact</h2>
+    </div>
+  </div>
+  <div class="contact-strip rv">
+    <div class="c-block">
+      <div class="c-rule"></div>
+      <h4>Adresse</h4>
+      <p>181 Rue Saint-Paul Est<br>Montréal, QC H2Y 1G8<br>Vieux-Montréal</p>
+      <a href="https://maps.google.com/?q=181+Rue+Saint-Paul+E+Montreal" target="_blank" style="margin-top:1.2rem;color:var(--gold);font-size:.78rem;">Voir sur la carte →</a>
+    </div>
+    <div class="c-div"></div>
+    <div class="c-block">
+      <div class="c-rule"></div>
+      <h4>Heures d'ouverture</h4>
+      <p>Lundi – Vendredi<br>11h30 – 22h00</p>
+      <p style="margin-top:.5rem;">Samedi – Dimanche<br>11h00 – 23h00</p>
+    </div>
+    <div class="c-div"></div>
+    <div class="c-block">
+      <div class="c-rule"></div>
+      <h4>Nous joindre</h4>
+      <a href="tel:+15148660008">(514) 866-0008</a>
+      <a href="mailto:info@montrealpoutine.us">info@montrealpoutine.us</a>
+      <p style="margin-top:1.2rem;font-size:.78rem;">Sur place · À emporter · Livraison</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo">⚜ Montréal Poutine</div>
+  <p class="f-copy">© 2025 Montréal Poutine Resto Bar · Tous droits réservés</p>
+  <p class="f-addr">181 Rue Saint-Paul Est, Montréal QC</p>
+</footer>
+
+<script>
+// LOADER
+const ldp = document.getElementById('ldp');
+const ldr = document.getElementById('loader');
+let prog = 0;
+const iv = setInterval(()=>{
+  prog += Math.random() * 14 + 3;
+  if(prog >= 100){
+    prog = 100;
+    clearInterval(iv);
+    setTimeout(()=>{ ldr.classList.add('out'); setTimeout(()=>ldr.style.display='none', 750); }, 250);
+  }
+  ldp.style.width = prog + '%';
+}, 60);
+
+// CURSOR
+const ring = document.getElementById('cur-ring');
+const dot  = document.getElementById('cur-dot');
+let mx=0, my=0, rx=0, ry=0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+});
+(function tick(){ rx += (mx-rx)*.1; ry += (my-ry)*.1; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(tick); })();
+document.querySelectorAll('a,button').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('is-hovered'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('is-hovered'));
+});
+
+// NAV
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
+
+// REVEAL
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('on'); });
+}, {threshold: .1});
+document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+
+// MENU TABS
+function mTab(id, btn) {
+  document.querySelectorAll('.mcat').forEach(c => c.classList.remove('on'));
+  document.querySelectorAll('.mtab').forEach(b => b.classList.remove('on'));
+  document.getElementById('mc-' + id).classList.add('on');
+  btn.classList.add('on');
+}
+
+// VIDEO SPEED ON SCROLL
+const hv = document.getElementById('hvid');
+let lastY = 0;
+window.addEventListener('scroll', () => {
+  const vel = Math.abs(window.scrollY - lastY);
+  lastY = window.scrollY;
+  if(hv) hv.playbackRate = Math.min(1 + vel * 0.012, 2.5);
+});
+</script>
+</body>
+</html>
